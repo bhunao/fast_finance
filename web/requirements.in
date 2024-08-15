@@ -11,7 +11,9 @@ pyjwt[crypto]==2.8.0
 # database
 psycopg2-binary==2.9.9
 databases[postgresql]==0.4.2
+sqlmodel==0.0.21
 alembic==1.4.2
+psycopg[binary]==3.1.13
 
 # tests
 pytest==7.4.2

@@ -8,10 +8,10 @@ services:
     env_file:
       - .env
     environment:
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-      POSTGRES_PORT: "${POSTGRES_PORT}"
-      POSTGRES_DB: "${POSTGRES_DB}"
+      DATABASE_USER: "${DATABASE_USER}"
+      DATABASE_PASSWORD: "${DATABASE_PASSWORD}"
+      DATABASE_PORT: "${DATABASE_PORT}"
+      DATABASE_DB: "${DATABASE_DB}"
 
   pgweb:
     restart: always
@@ -21,7 +21,7 @@ services:
     env_file:
       - .env
     environment:
-      PGWEB_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable
+      PGWEB_DATABASE_URL: postgres://${DATABASE_USER}:${DATABASE_PASSWORD}@db:${DATABASE_PORT}/${DATABASE_DB}?sslmode=disable
     depends_on:
       - postgredb
 
@@ -32,7 +32,13 @@ services:
     env_file:
       - .env
     ports:
-      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+      - "${DATABASE_PORT}:${DATABASE_PORT}"
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
 
 volumes:
     postgres_data:
