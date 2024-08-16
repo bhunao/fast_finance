@@ -38,7 +38,19 @@ Website para gerenciar dados financeiros pessoais, de um jeito fácil, rapido e 
 No front-end [Bootstrap](https://getbootstrap.com/) para estilização e responvidade da aplicação. [Jinja2Fragments](https://github.com/sponsfreixes/jinja2-fragments) para o backend retornar o conteudo HTML ao usuário e diferente do [Jinja](https://jinja.palletsprojects.com/en/3.1.x/) ele pode retornar sómente blocos de HTML gerados no Jinja e isso junto com [HTMX](https://htmx.org/) torna possivel criar paginas que consigam conectar com o backend diretamente sem a necessidade de ter uma aplicação separada para o front-end já que HTMX te da acesso a AJAX, transições CSS, WebSockets e Server Sent Events direto no HTML.
 
 #### Back-End
-[FastAPI](https://fastapi.tiangolo.com/) um framework moderno de alta performance para construção de APIs, [Pydantic](https://docs.pydantic.dev/) para validação de dados, [SQLModel](https://sqlmodel.tiangolo.com/) como ORM e query builder para conexão com o banco de dados [PostgreSQL](https://hub.docker.com/_/postgres/).
+[FastAPI](https://fastapi.tiangolo.com/) um framework moderno de alta performance para construção de APIs, [Pydantic](https://docs.pydantic.dev/) para validação de dados.
+
+#### Database
+[SQLModel](https://sqlmodel.tiangolo.com/) como ORM e query builder para conexão com o banco de dados [PostgreSQL](https://hub.docker.com/_/postgres/).
+
+##### Tables
+###### Transações
+Data
+Valor
+ID Externo
+Tipo Descrição
+Destino Descrição
+Descrição Completa
 
 #### PGWeb
 Imagem docker utilizada no desenvolvimento para facilitar a visualização dos dados no banco de dados pela web.
