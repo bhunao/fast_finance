@@ -33,4 +33,3 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-engine = create_engine(str(settings.DATABASE_URI))
