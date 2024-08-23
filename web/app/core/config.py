@@ -6,22 +6,23 @@ from sqlmodel import create_engine
 
 
 class Settings(BaseSettings):
-    DATABASE_USER: str = "admin"
-    DATABASE_PASSWORD: str = "1234"
-    DATABASE_SERVER: str = "server"
-    DATABASE_PORT: int = 8181
-    DATABASE_DB: str = "projectdb"
+    DATABASE_USER: str = "DATABASE_USER"
+    DATABASE_PASSWORD: str = "DATABASE_PASSWORD"
+    DATABASE_SERVER: str = "DATABASE_SERVER"
+    DATABASE_PORT: int = 9999
+    DATABASE_DB: str = "DATABASE_DB"
 
-    MONGO_INITDB_ROOT_USERNAME: str = "REPLACE"
-    MONGO_INITDB_ROOT_PASSWORD: str = "REPLACE"
+    MONGO_INITDB_ROOT_USERNAME: str = "SECRETUSERNAME"
+    MONGO_INITDB_ROOT_PASSWORD: str = "SECRETPASSWORD"
 
     TEMPLATES: Jinja2Blocks = Jinja2Blocks(directory="templates")
 
-    @computed_field()
+    @computed_field
     @property
     def DATABASE_URI(self) -> MultiHostUrl:
         return MultiHostUrl.build(
-            scheme="postgresql+psycopg",
+            # pgsql://admin@postgredb/fast_finance?schema=public
+            scheme="postgresql",
             username=self.DATABASE_USER,
             password=self.DATABASE_PASSWORD,
             host=self.DATABASE_SERVER,

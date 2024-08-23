@@ -8,37 +8,42 @@ services:
     env_file:
       - .env
     environment:
-      DATABASE_USER: "${DATABASE_USER}"
+      DATABASE_USER: "${DATABASE_USER}asdf"
       DATABASE_PASSWORD: "${DATABASE_PASSWORD}"
       DATABASE_PORT: "${DATABASE_PORT}"
+      DATABASE_SERVER: "${DATABASE_SERVER}"
       DATABASE_DB: "${DATABASE_DB}"
-
-  pgweb:
-    restart: always
-    image: sosedoff/pgweb
-    ports:
-      - 8081:8081
-    env_file:
-      - .env
-    environment:
-      PGWEB_DATABASE_URL: postgres://${DATABASE_USER}:${DATABASE_PASSWORD}@db:${DATABASE_PORT}/${DATABASE_DB}?sslmode=disable
     depends_on:
-      - postgredb
-
-  postgredb:
-    image: postgres:13-alpine
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    env_file:
-      - .env
-    ports:
-      - "${DATABASE_PORT}:${DATABASE_PORT}"
+      - postgresdb
 
   adminer:
     image: adminer
     restart: always
     ports:
-      - 8080:8080
+      - "8080:8080"
+    depends_on:
+      - postgresdb
+    environment:
+      - ADMINER_DESIGN=pepa-linha-dark
+
+  postgresdb:
+    image: postgres:13-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env
+    ports: 
+      - "${DATABASE_PORT}:${DATABASE_PORT}"
+    environment:
+      POSTGRES_USER: "${DATABASE_USER}"
+      # POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: "${DATABASE_PASSWORD}"
+      # POSTGRES_PORT: 5432
+      POSTGRES_PORT: "${DATABASE_PORT}"
+      # POSTGRES_SERVER: postgresdb
+      POSTGRES_SERVER: "${DATABASE_SERVER}"
+      # POSTGRES_DB: fastfinancedb
+      POSTGRES_DB: "${DATABASE_DB}"
 
 volumes:
     postgres_data:

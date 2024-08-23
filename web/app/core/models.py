@@ -1,10 +1,9 @@
 from typing import Annotated
 
-from pydantic import Field
-from sqlmodel import SQLModel
+from sqlmodel import SQLModel, Field
 
 
-class UserFields(SQLModel):
+class UserFields:
     id = Annotated[int, Field()]
     username = Annotated[str, Field(title="Usuário")]
     password = Annotated[str, Field(title="Senha")]
