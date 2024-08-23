@@ -6,6 +6,8 @@ from sqlmodel import create_engine
 
 
 class Settings(BaseSettings):
+    APP_NAME: str = "Fast Finance"
+
     DATABASE_USER: str = "DATABASE_USER"
     DATABASE_PASSWORD: str = "DATABASE_PASSWORD"
     DATABASE_SERVER: str = "DATABASE_SERVER"

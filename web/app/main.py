@@ -1,12 +1,10 @@
 from collections.abc import AsyncIterator
 import logging
 
-from contextlib import _AsyncGeneratorContextManager, asynccontextmanager
-from types import AsyncGeneratorType
+from contextlib import asynccontextmanager
 from typing import TypedDict
 
 from fastapi import FastAPI, Request
-from httpx import AsyncClient
 
 from app.core.config import engine, settings
 from app.models import SQLModel
@@ -35,12 +33,14 @@ async def lifespan(app: FastAPI) -> AsyncIterator[State]:
         SQLModel.metadata.create_all(engine)
         state["database_connection"] = True
     except Exception as connection_error:
+        # TODO: theres some typing issue here, i don't know which but there is
         state["database_connection_error"] = connection_error
 
     yield state
 
 
 app = FastAPI(
+    title=settings.APP_NAME,
     lifespan=lifespan
 )
 
@@ -48,10 +48,4 @@ app = FastAPI(
 @app.get("/check_health")
 async def check_health(r: Request):
     """Endpoint for testing if the web server is online."""
-    return {"state": r.state}
-
-
-@app.get("/app_state")
-async def app_state(request: Request):
-    """Get all the app state data."""
-    return request.state
+    return r.state
