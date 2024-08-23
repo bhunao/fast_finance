@@ -23,7 +23,6 @@ class Settings(BaseSettings):
     @property
     def DATABASE_URI(self) -> MultiHostUrl:
         return MultiHostUrl.build(
-            # pgsql://admin@postgredb/fast_finance?schema=public
             scheme="postgresql",
             username=self.DATABASE_USER,
             password=self.DATABASE_PASSWORD,
