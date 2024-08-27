@@ -32,7 +32,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[State]:
     }
 
     try:
-        SQLModel.metadata.create_all(engine)
+        # SQLModel.metadata.create_all(engine) # no need with migrations
         state["database_connection"] = True
     except Exception as connection_error:
         # TODO: theres some typing issue here, i don't know which but there is
