@@ -1,7 +1,10 @@
 from typing import Annotated
 
+from sqlmodel import Field
+
 from app.core.models import UserBase
-from app.core.models import SQLModel, Field
+from app.core.models import SQLModel as BaseModel
+# from sqlmodel import SQLModel, Field
 
 UserBase = UserBase
 
@@ -15,7 +18,7 @@ class TransactionFields:
     description = Annotated[str | None, Field(default=None)]
 
 
-class TransactionUpdate(SQLModel):
+class TransactionUpdate(BaseModel):
     id: TransactionFields.id
     external_id: TransactionFields.external_id | None = None
     value: TransactionFields.value | None = None
@@ -24,7 +27,7 @@ class TransactionUpdate(SQLModel):
     description: TransactionFields.description | None = None
 
 
-class TransactionCreate(SQLModel):
+class TransactionCreate(BaseModel):
     external_id: TransactionFields.external_id
     value: TransactionFields.value
     type: TransactionFields.type
@@ -32,7 +35,7 @@ class TransactionCreate(SQLModel):
     description: TransactionFields.description
 
 
-class Transaction(SQLModel, table=True):
+class Transaction(BaseModel, table=True):
     id: TransactionFields.id
     external_id: TransactionFields.external_id
     value: TransactionFields.value

@@ -20,6 +20,6 @@ COPY . /web
 
 # RUN alembic upgrade head
 # this generates an error trying to connect to database and will only run when building the image
-# must find another way to run `alembic upgrade head`
+# must find another way to run `alembic upgrade head` everytime
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8777", "--reload"]

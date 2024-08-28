@@ -1,14 +1,14 @@
 from collections.abc import AsyncIterator
 import logging
 
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, contextmanager
 from typing import TypedDict
 
 from fastapi import FastAPI, Request
+from sqlmodel import text
 
 from app.core.config import settings
-from app.core.database import engine
-from app.models import SQLModel
+from app.core.database import get_session
 from app.routers.transactions import router as transactions
 
 
@@ -32,8 +32,12 @@ async def lifespan(app: FastAPI) -> AsyncIterator[State]:
     }
 
     try:
-        # SQLModel.metadata.create_all(engine) # no need with migrations
         state["database_connection"] = True
+
+        with contextmanager(get_session)() as session:
+            query = text("select 1")
+            _ = session.exec(query).all()
+        # TODO: check db connection
     except Exception as connection_error:
         # TODO: theres some typing issue here, i don't know which but there is
         state["database_connection_error"] = connection_error
@@ -52,4 +56,5 @@ app.include_router(transactions, prefix="/transactions")
 @app.get("/check_health")
 async def check_health(r: Request):
     """Endpoint for testing if the web server is online."""
+    print(r.state.__dict__)
     return r.state
