@@ -36,7 +36,6 @@ def database_url() -> str:
     port = os.getenv("DATABASE_PORT", "5432")
     db = os.getenv("DATABASE_DB", "fastfinancedb")
     url = f"postgresql://{user}:{password}@{server}:{port}/{db}"
-    print(url)
     return url
 
 
