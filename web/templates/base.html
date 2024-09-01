@@ -1,38 +1,60 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" data-bs-theme="">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>RSS feeder</title>
-        <script src="/static/htmx.js"/></script>
+        <title>
+            {% block html_head_title %}{{ title }}{% endblock %}
+        </title>
+        <script src="/static/htmx.js" /></script>
         <link href="/static/bootstrap.css" rel="stylesheet">
         <link href="/static/index.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+        <link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
     </head>
     <body>
-
-        <div class="container mt-5 bg-light border p-3">
-
-            <h2 class="display-1 text-center">{{ title }}</h2>
-            <hr>
-
-
-            {% block content %}
-                <h1 class="display-3">block content</h1>
-                <span class="card p-1 rounded rounded-0">
-                Lorem ipsum" is a placeholder text commonly used in the graphic design, printing, and publishing industries. It originated from a scrambled section of "De finibus bonorum et malorum," a work by Cicero written in 45 BC. The text has been used since the 1500s as a standard placeholder to demonstrate the visual form of a document or a typeface without relying on meaningful content.
-                </span>
-            {% endblock %}
-
-            <div class="container py-3">
-            {% block table %}
-                <h1 class="display-3">TABLE NOT FOUND :/</h1>
-            {% endblock %}
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">FastFinance</a>
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav"
+                        aria-controls="navbarNav"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <button class="btn nav-link" hx-get="/" hx-target="#body-content">Home</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn nav-link"
+                                    hx-get="/transactions/web/all"
+                                    hx-target="#body-content">Transações</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn nav-link disabled"
+                                    hx-get="/transactions/web/all"
+                                    hx-target="#body-content">Disabled</button>
+                        </li>
+                    </ul>
+                </div>
             </div>
-
+        </nav>
+        <div class="container mt-5 bg-light border p-3">
+            <h2 class="display-1 text-center">
+            {% block body_title %}
+                {{ title }}
+            {% endblock %}
+            </h2>
+            <hr>
+            <div id="body-content" class="container py-3">
+                {% block body %}<span class="display-5 text-center">Content body not found :/</span>{% endblock %}
+            </div>
         </div>
-
-
         <script src="/static/bootstrap.bundle.js"></script>
         <script>
         document.body.addEventListener('htmx:beforeOnLoad', function (evt) {
@@ -42,5 +64,5 @@
             }
         });
         </script>
-        </body>
+    </body>
 </html>

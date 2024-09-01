@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block body %}
+
+<h1 id="fast-finance">Fast Finance</h1>
+<h2 id="design">Design</h2>
+<h3 id="ideia">Ideia</h3>
+<p>Website para gerenciar dados financeiros pessoais, de um jeito fácil, rapido e direto ao ponto. A ideia é ser simples, fácil, consistente e rapido.</p>
+<h3 id="functional-requirements">Functional Requirements</h3>
+<ul>
+  <li>Upload de arquivos csv contendo transações bancarias</li>
+  <li>Página para <strong>tabela</strong>  <code>transaction</code> com n registros<ul>
+    <li>Opção para ver mais informações sobre um registro especifico</li>
+  </ul>
+  </li>
+  <li>Página para <strong>form</strong> <code>transaction</code> com a maioria das informações de 1 registro<ul>
+    <li>Opções para editar/deletar registro</li>
+  </ul>
+  </li>
+  <li>Página para <strong>form</strong> <code>transaction</code> para editar as informações do registro.</li>
+  <li>Página para <strong>form</strong> <code>transaction</code> para criar um novo registro.</li>
+  <li>Dashboard para agrupar e agregar informações vindas da tabela <code>transaction</code>.</li>
+  <li>Exportar <code>transaction</code> para arquivo csv para download.</li>
+</ul>
+<h3 id="non-functional-requirements">Non-Functional Requirements</h3>
+<ul>
+  <li>UI responsiva.</li>
+  <li>Teste para cada endpoint no minimo</li>
+</ul>
+<h3 id="technologies">Technologies</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Tecnologia</th>
+      <th>Versão</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="https://www.docker.com/">Docker</a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="https://hub.docker.com/_/postgres/">PostgreSQL</a></td>
+      <td>13-alpine</td>
+    </tr>
+    <tr>
+      <td><a href="https://hub.docker.com/_/postgres/">PGWeb</a></td>
+      <td>latest</td>
+    </tr>
+    <tr>
+      <td><a href="https://docs.python.org/3.11/">Python</a></td>
+      <td>3.11</td>
+    </tr>
+    <tr>
+      <td><a href="https://fastapi.tiangolo.com/">FastAPI</a></td>
+      <td>0.109</td>
+    </tr>
+    <tr>
+      <td><a href="https://sqlmodel.tiangolo.com/">SQLModel</a></td>
+      <td>0.109</td>
+    </tr>
+    <tr>
+      <td><a href="https://docs.pydantic.dev/">Pydantic</a></td>
+      <td>2.8</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/sponsfreixes/jinja2-fragments">Jinja2Fragments</a></td>
+      <td>1.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://htmx.org/">HTMX</a></td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://getbootstrap.com/">Bootstrap</a></td>
+      <td>5.3</td>
+    </tr>
+  </tbody>
+</table>
+<h4 id="front-end">Front-End</h4>
+<p>No front-end <a href="https://getbootstrap.com/">Bootstrap</a> para estilização e responvidade da aplicação. <a href="https://github.com/sponsfreixes/jinja2-fragments">Jinja2Fragments</a> para o backend retornar o conteudo HTML ao usuário e diferente do <a href="https://jinja.palletsprojects.com/en/3.1.x/">Jinja</a> ele pode retornar sómente blocos de HTML gerados no Jinja e isso junto com <a href="https://htmx.org/">HTMX</a> torna possivel criar paginas que consigam conectar com o backend diretamente sem a necessidade de ter uma aplicação separada para o front-end já que HTMX te da acesso a AJAX, transições CSS, WebSockets e Server Sent Events direto no HTML.</p>
+<h4 id="back-end">Back-End</h4>
+<p><a href="https://fastapi.tiangolo.com/">FastAPI</a> um framework moderno de alta performance para construção de APIs, <a href="https://docs.pydantic.dev/">Pydantic</a> para validação de dados.</p>
+<h4 id="database">Database</h4>
+<p><a href="https://sqlmodel.tiangolo.com/">SQLModel</a> como ORM e query builder para conexão com o banco de dados <a href="https://hub.docker.com/_/postgres/">PostgreSQL</a>.</p>
+<h5 id="tables">Tables</h5>
+<h6 id="transa-es">Transações</h6>
+<p>Data
+  Valor
+  ID Externo
+  Tipo Descrição
+  Destino Descrição
+  Descrição Completa</p>
+<h4 id="pgweb">PGWeb</h4>
+<p>Imagem docker utilizada no desenvolvimento para facilitar a visualização dos dados no banco de dados pela web.</p>
+
+{% endblock %}

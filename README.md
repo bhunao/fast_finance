@@ -35,7 +35,9 @@ Website para gerenciar dados financeiros pessoais, de um jeito fácil, rapido e 
 | [Bootstrap](https://getbootstrap.com/)                              | 5.3       |
 
 #### Front-End
-No front-end [Bootstrap](https://getbootstrap.com/) para estilização e responvidade da aplicação. [Jinja2Fragments](https://github.com/sponsfreixes/jinja2-fragments) para o backend retornar o conteudo HTML ao usuário e diferente do [Jinja](https://jinja.palletsprojects.com/en/3.1.x/) ele pode retornar sómente blocos de HTML gerados no Jinja e isso junto com [HTMX](https://htmx.org/) torna possivel criar paginas que consigam conectar com o backend diretamente sem a necessidade de ter uma aplicação separada para o front-end já que HTMX te da acesso a AJAX, transições CSS, WebSockets e Server Sent Events direto no HTML.
+No front-end [Bootstrap](https://getbootstrap.com/) para estilização e responvidade da aplicação. [Jinja2Fragments](https://github.com/sponsfreixes/jinja2-fragments) para o backend retornar o conteudo HTML ao usuário e diferente do [Jinja](https://jinja.palletsprojects.com/en/3.1.x/) ele pode retornar sómente blocos de HTML gerados no Jinja e isso junto com [HTMX](https://htmx.org/) torna possivel criar paginas que consigam conectar com o backend diretamente sem a necessidade de ter uma aplicação separada para o front-end já que HTMX te da acesso a AJAX, transições CSS, WebSockets e Server Sent Events direto no HTML.  
+  
+Utilizar as features do pydantic junto com jinja2-fragments para ter templates typadas.
 
 #### Back-End
 [FastAPI](https://fastapi.tiangolo.com/) um framework moderno de alta performance para construção de APIs, [Pydantic](https://docs.pydantic.dev/) para validação de dados.

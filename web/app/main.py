@@ -2,7 +2,7 @@ from collections.abc import AsyncIterator
 import logging
 
 from contextlib import asynccontextmanager, contextmanager
-from typing import TypedDict
+from typing import Any, TypedDict
 
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
@@ -13,6 +13,7 @@ from alembic.config import Config
 from app.core.config import settings
 from app.core.database import get_session
 from app.routers.transactions import router as transactions
+from app.utils import is_hx_request
 
 
 log_format = (
@@ -21,6 +22,7 @@ log_format = (
 )
 # logging.basicConfig(format=log_format, level=logging.INFO)
 log = logging.getLogger("uvicorn")
+TEMPLATES = settings.TEMPLATES.TemplateResponse
 
 
 def run_migrations():
@@ -76,3 +78,18 @@ async def check_health(r: Request):
     """Endpoint for testing if the web server is online."""
     print(r.state.__dict__)
     return r.state
+
+
+@app.get("/")
+async def readme(r: Request):
+    context: dict[str, Any] = {
+        "request": r,
+        "title": "Readme",
+    }
+
+    return TEMPLATES(
+        "readme.html",
+        context=context,
+        status_code=200,
+        block_name="body" if is_hx_request(r) else None
+    )

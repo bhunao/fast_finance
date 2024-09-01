@@ -34,21 +34,24 @@ async def create(record: TransactionCreate, session: Session = Depends(get_sessi
     return new_record
 
 
-@router.get("/go/home")
+@router.get("/web/all")
 async def home(request: Request, session: Session = Depends(get_session)):
     context: dict[str, Any] = {
         "request": request,
-        "title": "HOME",
+        "title": "All Transactions",
         "rows": session.exec(select(Transaction)).all(),
         # "include_fields": ["id", "value", "destiny"],
         # "exclude_fields": ["id", "value", "destiny"], # TODO: raise NotImplemented
         "table_index": True
     }
 
+    is_hx_request = request.headers.get("Hx-Request") == "true"
+
     return TEMPLATES(
         "table.html",
         context=context,
         status_code=200,
+        block_name="body" if is_hx_request else None
     )
 
 
