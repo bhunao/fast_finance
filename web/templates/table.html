@@ -1,0 +1,46 @@
+<!-- Generic table for any Pydantic type data type -->
+<!-- with option for **include_fields** passed as parameter -->
+<!-- and/or option for **exlude_fields** passed as parameter -->
+{% if not include_fields %}
+    {% if rows|length > 0 %}
+        {% set include_fields =  rows[0].__fields__ %}
+    {% else %}
+        {% set include_fields =  [] %}
+    {% endif %}
+{% endif %}
+
+{% extends "base.html" %}
+{% block table %}
+
+    <div class="border p-3">
+        <table class="table">
+            <thead>
+                <tr>
+                    {% if table_index %}
+                        <th scope="col">#</th>
+                    {% endif %}
+
+                    {% for column_name in include_fields %}
+                        <th scope="col">{{ column_name }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+
+            <tbody hx-target="closest tr" hx-swap="outerHTML swap:1s">
+                {% for col in rows %}
+                    <tr id="table_line_{{ col.id }}">
+
+                        {% if table_index %}
+                            <th scope="col">{{ col.id }}</th>
+                        {% endif %}
+
+                        {% for column_name in include_fields %}
+                            <td>{{ col[column_name] }}</td>
+                        {% endfor %}
+
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

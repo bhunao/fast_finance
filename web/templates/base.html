@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en" data-bs-theme="">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>RSS feeder</title>
+        <script src="/static/htmx.js"/></script>
+        <link href="/static/bootstrap.css" rel="stylesheet">
+        <link href="/static/index.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    </head>
+    <body>
+
+        <div class="container mt-5 bg-light border p-3">
+
+            <h2 class="display-1 text-center">{{ title }}</h2>
+            <hr>
+
+
+            {% block content %}
+                <h1 class="display-3">block content</h1>
+                <span class="card p-1 rounded rounded-0">
+                Lorem ipsum" is a placeholder text commonly used in the graphic design, printing, and publishing industries. It originated from a scrambled section of "De finibus bonorum et malorum," a work by Cicero written in 45 BC. The text has been used since the 1500s as a standard placeholder to demonstrate the visual form of a document or a typeface without relying on meaningful content.
+                </span>
+            {% endblock %}
+
+            <div class="container py-3">
+            {% block table %}
+                <h1 class="display-3">TABLE NOT FOUND :/</h1>
+            {% endblock %}
+            </div>
+
+        </div>
+
+
+        <script src="/static/bootstrap.bundle.js"></script>
+        <script>
+        document.body.addEventListener('htmx:beforeOnLoad', function (evt) {
+            if (evt.detail.xhr.status === 401) {
+                evt.detail.shouldSwap = true;
+                evt.detail.isError = false;
+            }
+        });
+        </script>
+        </body>
+</html>

@@ -2,12 +2,15 @@ from pydantic.fields import computed_field
 from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings
 from jinja2_fragments.fastapi import Jinja2Blocks
-from sqlmodel import create_engine
 
 
 class Settings(BaseSettings):
     APP_NAME: str = "Fast Finance"
 
+    # Templating
+    TEMPLATES: Jinja2Blocks = Jinja2Blocks(directory="templates")
+
+    # Database
     DATABASE_USER: str = "DATABASE_USER"
     DATABASE_PASSWORD: str = "DATABASE_PASSWORD"
     DATABASE_SERVER: str = "DATABASE_SERVER"
@@ -16,8 +19,6 @@ class Settings(BaseSettings):
 
     MONGO_INITDB_ROOT_USERNAME: str = "SECRETUSERNAME"
     MONGO_INITDB_ROOT_PASSWORD: str = "SECRETPASSWORD"
-
-    TEMPLATES: Jinja2Blocks = Jinja2Blocks(directory="templates")
 
     @computed_field
     @property

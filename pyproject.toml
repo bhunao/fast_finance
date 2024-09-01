@@ -29,6 +29,8 @@ reportUnknownMemberType = "warning"
 reportUnknownParameterType = false
 reportUnknownVariableType = false
 
+reportCallInDefaultInitializer = false
+
 executionEnvironments = [
   { root = "web" }
 ]

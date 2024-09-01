@@ -1,6 +1,6 @@
 import logging
 
-from typing import Any
+from typing import Any, DefaultDict, TypedDict
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import HTMLResponse
@@ -17,6 +17,11 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
+class TemplateContext(TypedDict):
+    request: Request
+    title: str
+
+
 @router.post("/")
 async def create(record: TransactionCreate, session: Session = Depends(get_session)):
     new_record = Transaction(**record.model_dump())
@@ -27,6 +32,24 @@ async def create(record: TransactionCreate, session: Session = Depends(get_sessi
     session.refresh(new_record)
 
     return new_record
+
+
+@router.get("/go/home")
+async def home(request: Request, session: Session = Depends(get_session)):
+    context: dict[str, Any] = {
+        "request": request,
+        "title": "HOME",
+        "rows": session.exec(select(Transaction)).all(),
+        # "include_fields": ["id", "value", "destiny"],
+        # "exclude_fields": ["id", "value", "destiny"], # TODO: raise NotImplemented
+        "table_index": True
+    }
+
+    return TEMPLATES(
+        "table.html",
+        context=context,
+        status_code=200,
+    )
 
 
 @router.get("/all", response_model=list[Transaction])
@@ -75,13 +98,3 @@ async def delete(id: int, session: Session = Depends(get_session)):
             detail=f"No Trasanction with id '{id}' found."
         )
     return record
-
-
-# @router.get("/home")
-# async def home(request: Request):
-#     context: dict[str, Any] = {"request": request}
-#     return TEMPLATES(
-#         "base.html",
-#         context=context,
-#         status_code=200,
-#     )

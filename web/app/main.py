@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager, contextmanager
 from typing import TypedDict
 
 from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
 from sqlmodel import select
 from alembic import command
 from alembic.config import Config
@@ -45,7 +46,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[State]:
         with contextmanager(get_session)() as session:
             query = select(1)
             _ = session.exec(query).all()
-        run_migrations()
+        # run_migrations()
         state["database_connection"] = True
     except Exception as connection_error:
         # TODO: theres some typing issue here, i don't know which but its here
@@ -62,6 +63,12 @@ app = FastAPI(
 )
 
 app.include_router(transactions, prefix="/transactions")
+
+app.mount(
+    "/static",
+    StaticFiles(directory="static/"),
+    name="static"
+)
 
 
 @app.get("/check_health")
