@@ -93,3 +93,18 @@ async def readme(r: Request):
         status_code=200,
         block_name="body" if is_hx_request(r) else None
     )
+
+
+@app.get("/login")
+async def login(r: Request):
+    context: dict[str, Any] = {
+        "request": r,
+        "title": "Login",
+    }
+
+    return TEMPLATES(
+        "login.html",
+        context=context,
+        status_code=200,
+        block_name="body" if is_hx_request(r) else None
+    )
