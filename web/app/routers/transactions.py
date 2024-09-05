@@ -94,7 +94,7 @@ async def delete(id: int, session: Session = Depends(get_session)):
 @html_router.get("/all", response_class=HTMLResponse)
 async def home(request: Request, session: Session = Depends(get_session)):
     rows = session.exec(select(Transaction)).all()
-    exclude_columns: set[str] = {"value", "id"}
+    exclude_columns: set[str] = {"id"}
 
     def model_to_dict(rows: Sequence[Transaction], exclude: set[str] | None = None):
         exclude = exclude if exclude else set()
