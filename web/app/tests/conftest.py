@@ -6,7 +6,8 @@ from fastapi.testclient import TestClient
 from sqlmodel import Session, create_engine
 
 from app.core.database import get_session
-from app.main import app, SQLModel
+from app.main import app
+from app.models import BaseModel
 
 
 sqlite_url = "sqlite:///./db_test.db"
@@ -15,7 +16,7 @@ engine = create_engine(
     echo=False,
     connect_args={"check_same_thread": False}
 )
-SQLModel.metadata.create_all(engine)
+BaseModel.metadata.create_all(engine)
 
 
 def mock_get_session():

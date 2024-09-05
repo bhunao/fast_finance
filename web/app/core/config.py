@@ -1,3 +1,5 @@
+import secrets
+
 from pydantic.fields import computed_field
 from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings
@@ -6,6 +8,10 @@ from jinja2_fragments.fastapi import Jinja2Blocks
 
 class Settings(BaseSettings):
     APP_NAME: str = "Fast Finance"
+
+    # security
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
+    SECRET_KEY: str = secrets.token_urlsafe(32)
 
     # Templating
     TEMPLATES: Jinja2Blocks = Jinja2Blocks(directory="templates")

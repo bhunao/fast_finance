@@ -6,6 +6,9 @@ pydantic_core==2.20.1
 uvicorn==0.24.0.post1
 python-multipart==0.0.7
 jinja2-fragments==1.2.1
+
+# security
+passlib[bcrypt]==1.7.4
 pyjwt[crypto]==2.8.0
 
 # database

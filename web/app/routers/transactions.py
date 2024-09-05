@@ -25,7 +25,6 @@ class TemplateContext(TypedDict):
 @router.post("/")
 async def create(record: TransactionCreate, session: Session = Depends(get_session)):
     new_record = Transaction(**record.model_dump())
-    print(type(new_record), new_record)
 
     session.add(new_record)
     session.commit()
@@ -70,9 +69,7 @@ async def get_one(id: int, session: Session = Depends(get_session)):
 
 @router.patch("/{id}")
 async def update(record: TransactionUpdate, session: Session = Depends(get_session)):
-    print(record)
     _update = record.model_dump(exclude_none=True)
-    print(_update)
     one = False
     updated_record = False
     try:
