@@ -2,14 +2,11 @@
 <!-- with option for **include_fields** passed as parameter -->
 <!-- and/or option for **exlude_fields** passed as parameter -->
 {% extends "base.html" %}
-{% block body_title %}
-asdkfjaçsldkfj
-{% endblock %}
 {% block body %}
 
 {% if not include_fields %}
     {% if rows|length > 0 %}
-        {% set include_fields =  rows[0].__fields__ %}
+        {% set include_fields =  rows[0].keys() %}
     {% else %}
         {% set include_fields =  [] %}
     {% endif %}
@@ -19,7 +16,7 @@ asdkfjaçsldkfj
     <table class="table">
         <thead>
             <tr>
-                {% if table_index %}
+                {% if table_index and "id" in include_fields %}
                 <th scope="col">#</th>
                 {% endif %}
 
@@ -32,11 +29,11 @@ asdkfjaçsldkfj
         <tbody>
             {% for col in rows %}
             <tr id="table_line_{{ col.id }}">
-                {% if table_index %}
+                {% if table_index and "id" in include_fields %}
                 <th scope="col">{{ col.id }}</th>
                 {% endif %}
 
-                {% for column_name in include_fields %}
+                {% for column_name in col %}
                 <td>{{ col[column_name] }}</td>
                 {% endfor %}
             </tr>
