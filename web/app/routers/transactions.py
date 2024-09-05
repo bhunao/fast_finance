@@ -1,9 +1,11 @@
 import logging
 
 from typing import Any, TypedDict
+from collections.abc import Sequence
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import HTMLResponse
+from pydantic import BaseModel
 from sqlalchemy.exc import NoResultFound
 from sqlmodel import Session, select
 
@@ -15,7 +17,9 @@ from app.models import Transaction, TransactionCreate, TransactionUpdate
 TEMPLATES = settings.TEMPLATES.TemplateResponse
 
 logger = logging.getLogger(__name__)
-router = APIRouter()
+
+html_router = APIRouter()
+json_router = APIRouter()
 
 
 class TemplateContext(TypedDict):
@@ -23,7 +27,14 @@ class TemplateContext(TypedDict):
     title: str
 
 
-@router.post("/")
+class Context(BaseModel):
+    request: Any  # error when `Request` is the type annotation
+    title: str
+    rows: Sequence[Transaction]
+    table_index: bool = True
+
+
+@json_router.post("/")
 async def create(record: TransactionCreate, session: Session = Depends(get_session)):
     new_record = Transaction(**record.model_dump())
 
@@ -34,41 +45,20 @@ async def create(record: TransactionCreate, session: Session = Depends(get_sessi
     return new_record
 
 
-@router.get("/web/all", response_class=HTMLResponse)
-async def home(request: Request, session: Session = Depends(get_session)):
-    context: dict[str, Any] = {
-        "request": request,
-        "title": "All Transactions",
-        "rows": session.exec(select(Transaction)).all(),
-        # "include_fields": ["id", "value", "destiny"],
-        # "exclude_fields": ["id", "value", "destiny"], # TODO: raise NotImplemented
-        "table_index": True
-    }
-
-    is_hx_request = request.headers.get("Hx-Request") == "true"
-
-    return TEMPLATES(
-        "table.html",
-        context=context,
-        status_code=200,
-        block_name="body" if is_hx_request else None
-    )
-
-
-@router.get("/all", response_model=list[Transaction])
+@json_router.get("/all", response_model=list[Transaction])
 async def get_all(session: Session = Depends(get_session)):
     statement = select(Transaction)
     result = session.exec(statement).all()
     return result
 
 
-@router.get("/{id}", response_model=Transaction)
+@json_router.get("/{id}", response_model=Transaction)
 async def get_one(id: int, session: Session = Depends(get_session)):
     one = session.get_one(Transaction, id)
     return one
 
 
-@router.patch("/{id}")
+@json_router.patch("/{id}")
 async def update(record: TransactionUpdate, session: Session = Depends(get_session)):
     _update = record.model_dump(exclude_none=True)
     one = False
@@ -87,7 +77,7 @@ async def update(record: TransactionUpdate, session: Session = Depends(get_sessi
     return updated_record
 
 
-@router.delete("/{id}")
+@json_router.delete("/{id}")
 async def delete(id: int, session: Session = Depends(get_session)):
     try:
         record = session.get_one(Transaction, id)
@@ -99,3 +89,34 @@ async def delete(id: int, session: Session = Depends(get_session)):
             detail=f"No Trasanction with id '{id}' found."
         )
     return record
+
+
+@html_router.get("/all", response_class=HTMLResponse)
+async def home(request: Request, session: Session = Depends(get_session)):
+    rows = session.exec(select(Transaction)).all()
+    exclude_columns: set[str] = {"value", "id"}
+
+    def model_to_dict(rows: Sequence[Transaction], exclude: set[str] | None = None):
+        exclude = exclude if exclude else set()
+        rows = tuple(
+            map(
+                lambda r: r.model_dump(exclude=exclude),
+                rows
+            )
+        )
+        return rows
+
+    context = Context(
+        request=request,
+        title="All Transactions",
+        rows=model_to_dict(rows, exclude_columns)
+    ).model_dump()
+
+    is_hx_request = request.headers.get("Hx-Request") == "true"
+
+    return TEMPLATES(
+        "table.html",
+        context=context,
+        status_code=200,
+        block_name="body" if is_hx_request else None
+    )

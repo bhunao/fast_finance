@@ -12,10 +12,13 @@ def create_transaction(client: TestClient):
         "description": "description_test"
     }
     response = client.post(
-        "/transactions",
+        "/json/transactions",
         json=body
     )
-    return response.json()
+    assert response.status_code == 200, f"Failed connection: {response.status_code=}"
+    json = response.json()
+    assert "id" in json
+    return json
 
 
 def test_create_transaction(client: TestClient):
@@ -27,7 +30,7 @@ def test_create_transaction(client: TestClient):
         "description": "description_test"
     }
     response = client.post(
-        "/transactions",
+        "/json/transactions",
         json=body
     )
 
@@ -42,7 +45,7 @@ def test_create_transaction(client: TestClient):
 def test_get_one_transaction(client: TestClient):
     created_json = create_transaction(client)
     response = client.get(
-        f"/transactions/{created_json['id']}",
+        f"/json/transactions/{created_json['id']}",
     )
 
     assert response.status_code == 200
@@ -58,7 +61,7 @@ def test_update_one_transaction(client: TestClient):
     }
     assert body["description"] != created_json["description"], "Values should be different before updating."
     response = client.patch(
-        f"/transactions/{created_json['id']}",
+        f"/json/transactions/{created_json['id']}",
         json=body
     )
 
@@ -72,7 +75,7 @@ def test_update_one_transaction(client: TestClient):
 def test_delete_one_transaction(client: TestClient):
     created_json = create_transaction(client)
     response = client.delete(
-        f"/transactions/{created_json['id']}",
+        f"/json/transactions/{created_json['id']}",
     )
 
     assert response.status_code == 200
@@ -85,7 +88,7 @@ def test_delete_one_transaction(client: TestClient):
 def test_get_all_transactions(client: TestClient) -> None:
     transactions_json_list = [create_transaction(client) for _ in range(10)]
     response = client.get(
-        "/transactions/all",
+        "/web/transactions/all",
     )
 
     assert response.status_code == 200
