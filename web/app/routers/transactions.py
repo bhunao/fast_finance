@@ -1,6 +1,6 @@
 import logging
 
-from typing import Any, DefaultDict, TypedDict
+from typing import Any, TypedDict
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import HTMLResponse
@@ -13,6 +13,7 @@ from app.models import Transaction, TransactionCreate, TransactionUpdate
 
 
 TEMPLATES = settings.TEMPLATES.TemplateResponse
+
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
@@ -33,7 +34,7 @@ async def create(record: TransactionCreate, session: Session = Depends(get_sessi
     return new_record
 
 
-@router.get("/web/all")
+@router.get("/web/all", response_class=HTMLResponse)
 async def home(request: Request, session: Session = Depends(get_session)):
     context: dict[str, Any] = {
         "request": request,
