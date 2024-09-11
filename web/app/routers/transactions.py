@@ -1,6 +1,6 @@
 import logging
 
-from typing import Any, TypedDict
+from typing import Any
 from collections.abc import Sequence
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
@@ -20,11 +20,6 @@ logger = logging.getLogger(__name__)
 
 html_router = APIRouter()
 json_router = APIRouter()
-
-
-class TemplateContext(TypedDict):
-    request: Request
-    title: str
 
 
 class Context(BaseModel):
