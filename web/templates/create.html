@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block body %}
+
+  <div class="container border p-3">
+    <form hx-post="/web/transaction/creatina" hx-encoding="multipart/form-data">
+
+      {% for field in model_class.model_fields %}
+      <div class="mb-3">
+        <label for="{{ field }}" class="form-label">{{ field }}</label>
+        <input
+          type="{{ model_class.model_fields[field] | get_input_type_from_field }}"
+          class="form-control"
+          id="{{ field }}"
+          name="{{ field }}"
+          {% if model_class.model_fields[field].is_required() %}
+          required
+          {% endif %}
+        >
+      </div>
+      {% endfor %}
+
+      <!-- submit button -->
+      <button type="submit" class="btn btn-primary">Submit</button>
+
+    </form>
+  </div>
+
+{% endblock %}

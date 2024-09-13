@@ -110,26 +110,9 @@
                             </button>
                         </div>
                     </div>
-
-                    <div class="container text-center">
-                      <div class="row align-items-start">
-                        <div class="col">
-                        <canvas id="myChart"></canvas>
-                        <canvas id="myPieChart" width="400" height="400"></canvas>
-                          One of three columns
-                        </div>
-                        <div class="col">
-                    <h2 class="mt-5">Transaction</h2>
-                    <hr/>
-                    {% block body %}
-                    <span class="display-5 text-center">Content body not found :/</span>
-                    {% endblock %}
-                          One of three columns
-                        </div>
-                      </div>
-                    </div>
-                    <div>
-                    </div>
+                        {% block body %}
+                        <span class="display-5 text-center">not found :/</span>
+                        {% endblock %}
 
                 </main>
             </div>
@@ -147,8 +130,8 @@
         });
         </script>
 
-        
-    <script>
+
+        <script>
         // Pie chart configuration
         const pie_ctx = document.getElementById('myPieChart').getContext('2d');
         const myPieChart = new Chart(pie_ctx, {
@@ -186,7 +169,7 @@
                 }
             }
         });
-    </script>
+        </script>
 
 
         <script>

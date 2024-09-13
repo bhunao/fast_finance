@@ -33,7 +33,7 @@ def test_transaction_all(client: TestClient):
     assert isinstance(rows[0], dict)
 
 
-@pytest.mark.skip("TDD, have to create the endpoint.")
+# @pytest.mark.skip("TDD, have to create the endpoint.")
 def test_transaction_dashboard(client: TestClient):
     response: TemplateResponse = client.get(  # pyright: ignore[reportAssignmentType]
         "/web/transactions/dashboard",
@@ -43,5 +43,15 @@ def test_transaction_dashboard(client: TestClient):
     assert response.template.name == "dashboard.html"
 
     rows = response.context["rows"]
-    assert isinstance(rows, tuple)
+    assert isinstance(rows, list)
     assert isinstance(rows[0], dict)
+
+
+# test for the endpoint creatina.
+def test_transaction_creatina(client: TestClient):
+    response: TemplateResponse = client.get(  # pyright: ignore[reportAssignmentType]
+        "/web/transactions/creatina",
+    )
+    assert response.status_code == 200
+    assert has_template(response)
+    assert response.template.name == "create.html"
