@@ -48,9 +48,9 @@ def test_transaction_dashboard(client: TestClient):
 
 
 # test for the endpoint creatina.
-def test_transaction_creatina(client: TestClient):
+def test_transaction_create(client: TestClient):
     response: TemplateResponse = client.get(  # pyright: ignore[reportAssignmentType]
-        "/web/transactions/creatina",
+        "/web/transactions/create",
     )
     assert response.status_code == 200
     assert has_template(response)
