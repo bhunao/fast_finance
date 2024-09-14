@@ -158,15 +158,13 @@ async def dashboard(request: Request, session: Session = Depends(get_session)):
         block_name="body" if is_hx_request else None
     )
 
-# router for the create.html form
-@html_router.get("/creatina", response_class=HTMLResponse)
-async def create(request: Request):
+@html_router.get("/create", response_class=HTMLResponse)
+async def create_transaction(request: Request):
     algo = ModelContext(
         request=request,
         title="Create Transaction",
         model_class=Transaction
     )
-    # breakpoint()
     context = algo.model_dump()
 
     return TEMPLATES(
@@ -174,3 +172,9 @@ async def create(request: Request):
         context=context,
         status_code=200
     )
+
+@html_router.post("/create", response_class=HTMLResponse)
+async def create_transaction(request: Request):
+    form = await request.form()
+    print(form)
+    return "<h1>asdlkjasldkj carai</h1>"
