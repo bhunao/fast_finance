@@ -7,20 +7,20 @@
 
 
       <div class="container px-5">
-        <h4 class="mb-3">New {{ model_class.__tablename__.title() }}</h4>
+        <h4 class="mb-3">New {{ record_class.__tablename__.title() }}</h4>
         <form hx-post="{{ url_for("create_transaction") }}" hx-encoding="multipart/form-data" hx-target="this">
 
-          {% for field in model_class.model_fields %}
+          {% for field in record_class.model_fields %}
 
           <div class="row mb-3">
             <label for="{{ field }}" class="col-sm-2 col-form-label">{{ field }}</label>
             <div class="col-sm-10">
               <input
-                type="{{ model_class.model_fields[field] | get_input_type_from_field }}"
+                type="{{ record_class.model_fields[field] | get_input_type_from_field }}"
                 class="form-control"
                 id="{{ field }}"
                 name="{{ field }}"
-                {% if model_class.model_fields[field].is_required() %}
+                {% if record_class.model_fields[field].is_required() %}
                 required
                 {% endif %}
               >
@@ -31,7 +31,7 @@
 
           <hr class="my-4">
 
-          <button class="w-100 btn btn-primary btn-lg" type="submit">Create New {{ model_class.__tablename__}}</button>
+          <button class="w-100 btn btn-primary btn-lg" type="submit">Create New {{ record_class.__tablename__}}</button>
         </form>
       </div>
     </div>

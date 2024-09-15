@@ -47,7 +47,7 @@ class Context(BaseModel):
 class ModelContext(BaseModel):
     request: Any  # error when `Request` is the type annotation
     title: str = "EMPTY TITLE"
-    model_class: Any
+    record_class: Any
 
 
 
@@ -163,7 +163,7 @@ async def create_transaction(request: Request):
     algo = ModelContext(
         request=request,
         title="Create Transaction",
-        model_class=Transaction
+        record_class=Transaction
     )
     context = algo.model_dump()
 
