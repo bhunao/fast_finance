@@ -9,6 +9,7 @@ from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from sqlalchemy.exc import NoResultFound
 from sqlmodel import Session, select, SQLModel
+from sqlalchemy.sql.functions import func
 
 from app.core.config import settings
 from app.core.database import get_session
@@ -206,4 +207,37 @@ async def upload_file(request: Request):
         "input_file.html",
         context=context,
         status_code=200,
+    )
+
+
+@html_router.get("/destiny")
+async def get_transactions_by_destiny(request: Request, session: Session = Depends(get_session)):
+
+    statement = (
+        select(
+            Transaction.destiny,
+            func.sum(Transaction.value).label("value")
+        )
+        .group_by(
+            Transaction.destiny,
+        ).order_by(
+        )
+    )
+    results = session.exec(statement)
+
+    rows = results.all()
+    rows = list(map(lambda row: Transaction(**row._mapping), rows))
+    rows = sorted(rows, key=lambda row: row.value, reverse=True)
+    context = Context(
+        request=request,
+        title="Transactions by destiny",
+        rows=rows,
+    ).model_dump()
+    context["rows"] = rows
+    context["exclude_fields"] = {"id", "date", "type", "external_id", "description"}
+
+    return TEMPLATES(
+        "table.html",
+        context=context,
+        status_code=200
     )
