@@ -1,11 +1,11 @@
 import logging
+from datetime import datetime
 
 from typing import Any
 from collections.abc import Sequence
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
-from pydantic.fields import FieldInfo
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, Depends, HTTPException, Request, status, UploadFile
+from fastapi.responses import HTMLResponse    
 from pydantic import BaseModel
 from sqlalchemy.exc import NoResultFound
 from sqlmodel import Session, select, SQLModel
@@ -13,6 +13,7 @@ from sqlmodel import Session, select, SQLModel
 from app.core.config import settings
 from app.core.database import get_session
 from app.models import Transaction, TransactionCreate, TransactionUpdate
+from app.utils import get_input_type_from_field, csv_file_to_dict
 
 
 TEMPLATES = settings.TEMPLATES.TemplateResponse
@@ -22,19 +23,13 @@ logger = logging.getLogger(__name__)
 html_router = APIRouter()
 json_router = APIRouter()
 
-def get_input_type_from_field(field: FieldInfo) -> str:
-    annotation = field.annotation
-    if annotation is int:
-        return "number"
-    if annotation is float:
-        return "number"
-    if annotation is str:
-        return "text"
-    if annotation is bool:
-        return "checkbox"
-    return "text"
 
 settings.TEMPLATES.env.filters["get_input_type_from_field"] = get_input_type_from_field
+my_type = type
+settings.TEMPLATES.env.filters["type"] = my_type
+
+# add to html template
+settings.TEMPLATES.env.globals["getattr"] = getattr
 
 
 class Context(BaseModel):
@@ -111,23 +106,16 @@ async def delete(id: int, session: Session = Depends(get_session)):
 @html_router.get("/all", response_class=HTMLResponse)
 async def home(request: Request, session: Session = Depends(get_session)):
     rows = session.exec(select(Transaction)).all()
-    exclude_columns: set[str] = {"id"}
-
-    def model_to_dict(rows: Sequence[Transaction], exclude: set[str] | None = None):
-        exclude = exclude if exclude else set()
-        rows = tuple(
-            map(
-                lambda r: r.model_dump(exclude=exclude),
-                rows
-            )
-        )
-        return rows
-
+    exclude_columns: set[str] = {"id", "external_id", "description"}
+    # print(rows[0].keys())
     context = Context(
         request=request,
         title="All Transactions",
-        rows=model_to_dict(rows, exclude_columns)
+        rows=rows,
     ).model_dump()
+
+    context["exclude_fields"] = exclude_columns
+    context["rows"] = rows
 
     is_hx_request = request.headers.get("Hx-Request") == "true"
 
@@ -178,3 +166,44 @@ async def create_transaction(request: Request):
     form = await request.form()
     print(form)
     return "<h1>asdlkjasldkj carai</h1>"
+
+
+@html_router.post("/upload")
+async def upload_file(file: UploadFile, session: Session = Depends(get_session)):
+    transactions_dict = await csv_file_to_dict(file)
+    transactions = [Transaction(**transaction) for transaction in transactions_dict]
+
+    # {'Data': '28/07/2024', 'Valor': -5.0, 'Identificador': '66a6d2b4-3942-4350-8764-4325681ab36d', 'Descrição': 'Compra no débito - Auttar Loja'}
+    for transaction in transactions_dict:
+        date = transaction["Data"]
+        date = datetime.strptime(date, "%d/%m/%Y")
+        _type = transaction["Descrição"].partition("-")[0]
+        destiny = transaction["Descrição"].partition("-")[2]
+        new_record = Transaction(
+            external_id=transaction["Identificador"],
+            value=transaction["Valor"],
+            type=_type,
+            destiny=destiny,
+            description=transaction["Descrição"],
+            date=date
+        )
+        print(new_record)
+
+        session.add(new_record)
+        session.commit()
+        session.refresh(new_record)
+
+    return "<h1>upload csv post</h1>"
+
+@html_router.get("/upload")
+async def upload_file(request: Request):
+    context = {
+        "request": request,
+        "title": "Input CSV",
+    }
+
+    return TEMPLATES(
+        "input_file.html",
+        context=context,
+        status_code=200,
+    )

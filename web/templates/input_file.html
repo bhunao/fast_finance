@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block body %}
+
+<!-- container with button to upload file -->
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <form hx-post="{{ url_for('upload_file') }}" hx-encoding="multipart/form-data" hx-target="this">
+        <div class="form-group">
+          <label for="file">File</label>
+          <input type="file" class="form-control-file" id="file" name="file">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -8,6 +8,7 @@
 
       <div class="container px-5">
         <h4 class="mb-3">New {{ record_class.__tablename__.title() }}</h4>
+        <h4 class="mb-3">New {{ record_class | type }}</h4>
         <form hx-post="{{ url_for("create_transaction") }}" hx-encoding="multipart/form-data" hx-target="this">
 
           {% for field in record_class.model_fields %}

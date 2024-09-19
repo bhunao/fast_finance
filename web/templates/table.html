@@ -1,14 +1,12 @@
 <!-- Generic table for any Pydantic type data type -->
-<!-- with option for **include_fields** passed as parameter -->
-<!-- and/or option for **exlude_fields** passed as parameter -->
 {% extends "base.html" %}
 {% block body %}
 
 {% if not include_fields %}
     {% if rows|length > 0 %}
-        {% set include_fields =  rows[0].keys() %}
+        {% set record_fields =  rows[0].__fields__ %}
     {% else %}
-        {% set include_fields =  [] %}
+        {% set record_fields =  [] %}
     {% endif %}
 {% endif %}
 
@@ -16,12 +14,14 @@
     <table class="table table-striped table-sm">
         <thead>
             <tr>
-                {% if table_index and "id" in include_fields %}
+                {% if table_index and "id" in record_fields %}
                 <th scope="col">#</th>
                 {% endif %}
 
-                {% for column_name in include_fields %}
-                <th scope="col">{{ column_name }}</th>
+                {% for column_name in record_fields %}
+                    {% if column_name not in exclude_fields %}
+                    <th scope="col">{{ column_name.title() }}</th>
+                    {% endif %}
                 {% endfor %}
             </tr>
         </thead>
@@ -29,12 +29,14 @@
         <tbody>
             {% for col in rows %}
             <tr id="table_line_{{ col.id }}">
-                {% if table_index and "id" in include_fields %}
+                {% if table_index and "id" in record_fields %}
                 <th scope="col">{{ col.id }}</th>
                 {% endif %}
 
-                {% for column_name in col %}
-                <td>{{ col[column_name] }}</td>
+                {% for column_name in record_fields %}
+                    {% if column_name not in exclude_fields %}
+                    <td>{{ getattr(col, column_name) }}</td>
+                    {% endif %}
                 {% endfor %}
             </tr>
             {% endfor %}

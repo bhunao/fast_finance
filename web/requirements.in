@@ -7,6 +7,9 @@ uvicorn==0.24.0.post1
 python-multipart==0.0.7
 jinja2-fragments==1.2.1
 
+# csv
+pandas==2.2.2
+
 # security
 passlib[bcrypt]==1.7.4
 pyjwt[crypto]==2.8.0

@@ -1,4 +1,5 @@
 from typing import Annotated
+from datetime import date
 
 from sqlmodel import Field
 
@@ -11,8 +12,9 @@ UserBase = UserBase
 
 class TransactionFields:
     id = Annotated[int, Field(primary_key=True)]
-    external_id = Annotated[int, Field()]
+    external_id = Annotated[str, Field(unique=True)]
     value = Annotated[int, Field()]
+    date = Annotated[date, Field()]
     type = Annotated[str, Field()]
     destiny = Annotated[str, Field()]
     description = Annotated[str | None, Field(default=None)]
@@ -37,8 +39,9 @@ class TransactionCreate(BaseModel):
 
 class Transaction(BaseModel, table=True):
     id: TransactionFields.id
-    external_id: TransactionFields.external_id
-    value: TransactionFields.value
+    date: TransactionFields.date
     type: TransactionFields.type
     destiny: TransactionFields.destiny
+    value: TransactionFields.value
+    external_id: TransactionFields.external_id
     description: TransactionFields.description
